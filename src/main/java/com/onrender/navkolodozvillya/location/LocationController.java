@@ -10,6 +10,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+import java.util.Set;
+
 @Tag(name = "Location Controller", description = "Location related APIs")
 @RestController
 @RequestMapping("/city")
@@ -25,5 +28,12 @@ public class LocationController {
     public ResponseEntity<GeoIP> getCity(HttpServletRequest request){
         var location = geoIpService.getIpLocation(request);
         return ResponseEntity.ok(location);
+    }
+
+    @Operation(summary = "Get all cities",
+            description = "Retrive summary information about all cities: id, English name, optional Ukrainian name")
+    @GetMapping("/getAll")
+    public List<CityResponse> getAll(){
+        return geoIpService.getAllCities();
     }
 }

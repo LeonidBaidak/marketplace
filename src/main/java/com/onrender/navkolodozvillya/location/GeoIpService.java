@@ -5,6 +5,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 import static java.util.Objects.requireNonNull;
 
 @Service
@@ -20,6 +22,10 @@ public class GeoIpService {
 
         return geoIpRepository.getIpLocation(ipAddress)
                 .orElse(new GeoIP(("Genereted for : " + ipAddress), "Kyiv", 50.4501, 30.5234));
+    }
+
+    public List<CityResponse> getAllCities() {
+        return geoIpRepository.getAllCities();
     }
 
     private static String getIpAddress(HttpServletRequest request) {

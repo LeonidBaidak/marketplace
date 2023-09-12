@@ -2,11 +2,14 @@ package com.onrender.navkolodozvillya.location;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
+import java.sql.PreparedStatement;
 import java.sql.Types;
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -38,6 +41,15 @@ public class GeoIpRepository {
         var geoIPOptional = position.stream().findAny();
         createLogs(ipAddress, geoIPOptional.isPresent());
         return geoIPOptional;
+    }
+
+    public List<CityResponse> getAllCities() {
+        String sql = """
+               SELECT geoname_id, city_name, ua_city_name
+               FROM geoip2_location
+               WHERE country_name LIKE 'Ukraine'
+                """;
+        return jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(CityResponse.class));
     }
 
     private static void createLogs(String ip, boolean isPresent) {
