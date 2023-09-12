@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+  http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+
+    <changeSet id="1" author="Leonid.Baidak">
+        <addColumn tableName="geoip2_location">
+            <column name="ua_city_name"
+                    type="VARCHAR(50)">
+                <constraints nullable="true" />
+            </column>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="2" author="Leonid.Baidak">
+        <loadData tableName="geoip2_location"
+                  relativeToChangelogFile="true"
+                  file="geoIpData/ukraine_location.csv"
+                  commentLineStartsWith="//"
+                  encoding="UTF-8"
+                  quotchar="&quot;"
+                  schemaName="public"
+                  separator=","
+                  usePreparedStatements="true">
+            <column name="geoname_id" header="geoname_id" type="Numeric"/>
+            <column name="locale_code" header="locale_code" type="VARCHAR"/>
+            <column name="continent_code" header="continent_code" type="VARCHAR"/>
+            <column name="continent_name" header="continent_name" type="VARCHAR"/>
+            <column name="country_name" header="country_name" type="VARCHAR"/>
+            <column name="city_name" header="city_name" type="VARCHAR"/>
+            <column name="is_in_european_union" header="is_in_european_union" type="BOOLEAN"/>
+            <column name="ua_city_name" header="ua_city_name" type="VARCHAR"/>
+        </loadData>
+       <rollback>
+           <sql dbms="postgresql">
+                DELETE FROM geoip2_location WHERE country_name LIKE 'Ukraine';
+           </sql>
+       </rollback>
+    </changeSet>
+</databaseChangeLog>
