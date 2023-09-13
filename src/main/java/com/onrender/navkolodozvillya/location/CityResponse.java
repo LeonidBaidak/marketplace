@@ -1,10 +1,13 @@
 package com.onrender.navkolodozvillya.location;
 
+import lombok.Builder;
 import lombok.Data;
 
 @Data
+@Builder
 public class CityResponse {
-     int geonameId;
-     String cityName;
-     String uaCityName;
+    
+    int geonameId;
+    String cityName;
+    String uaCityName;
 }

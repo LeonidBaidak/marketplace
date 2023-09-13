@@ -7,6 +7,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -76,5 +77,38 @@ class GeoIpServiceImplTest {
         verify(repository, times(1)).getIpLocation("0:0:0:0:0:0:0:1");
         verify(request, times(1)).getRemoteAddr();
         assertThat(result).isEqualTo(expectedLocation);
+    }
+
+    @Test
+    void getAllCitiesTest() {
+        List<CityResponse> list = List.of(CityResponse.builder()
+                        .geonameId(1)
+                        .cityName("test1")
+                        .uaCityName("тест1")
+                        .build(),
+                CityResponse.builder()
+                        .geonameId(2)
+                        .cityName("test2")
+                        .uaCityName("тест2")
+                        .build());
+
+        List<CityResponse> expectedResponse = List.of(CityResponse.builder()
+                        .geonameId(1)
+                        .cityName("test1")
+                        .uaCityName("тест1")
+                        .build(),
+                CityResponse.builder()
+                        .geonameId(2)
+                        .cityName("test2")
+                        .uaCityName("тест2")
+                        .build());
+
+        // given
+        given(repository.getAllCities()).willReturn(list);
+        // when
+        var actualResponse = underTest.getAllCities();
+        // then
+        assertThat(expectedResponse).isEqualTo(actualResponse);
+        verify(repository, times(1)).getAllCities();
     }
 }
