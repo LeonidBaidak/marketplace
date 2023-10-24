@@ -23,7 +23,7 @@ import io.swagger.v3.oas.annotations.servers.Server;
         servers = {
                 @Server(
                         description = "Production",
-                        url = "https://navkolodozvillya.onrender.com"
+                        url = "https://api.navkolodozvillia.site"
                 ),
                 @Server(
                         description = "Local",
