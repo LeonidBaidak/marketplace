@@ -16,6 +16,7 @@ import java.util.Objects;
 @Setter
 @NoArgsConstructor
 @ToString(exclude = {"user", "offering"})
+//TODO need to consider, if we do need to have this FavouriteOffering domain and all connected structure. Isn't it just many to many relationship??
 public class FavouriteOffering {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)

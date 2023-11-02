@@ -1,6 +1,5 @@
 package com.onrender.navkolodozvillya.config;
 
-import jakarta.servlet.Filter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -27,7 +26,7 @@ public class SecurityConfig {
         http.csrf()
                 .disable()
                 .authorizeHttpRequests()
-                .requestMatchers("/auth/**", "/city/**", "/offerings/**", "/users/**", "/doc/**", "/api-docs/**", "/upload/**") // white list for authentication
+                .requestMatchers("/auth/**", "/city/**", "/offerings/**", "/users/**", "/doc/**", "/api-docs/**") // white list for authentication
                 .permitAll()
                 .anyRequest()
                 .authenticated()

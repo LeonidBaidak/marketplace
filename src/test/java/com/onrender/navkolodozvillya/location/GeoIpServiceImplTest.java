@@ -17,7 +17,9 @@ import static org.mockito.Mockito.*;
 @ExtendWith(MockitoExtension.class)
 class GeoIpServiceImplTest {
     @Mock
-    private GeoIpRepository repository;
+    private GeoIpRepository geoIpRepository;
+    @Mock
+    private LocationRepository locationRepository;
     @Mock
     private HttpServletRequest request;
 
@@ -25,7 +27,7 @@ class GeoIpServiceImplTest {
 
     @BeforeEach
     void setUp() {
-        underTest = new GeoIpService(repository);
+        underTest = new GeoIpService(geoIpRepository, locationRepository);
     }
 
     @Test
@@ -35,12 +37,12 @@ class GeoIpServiceImplTest {
         var location = new GeoIP(ipAddress, "Kyiv", 50.458, 30.5303);
         given(request.getRemoteAddr())
                 .willReturn(ipAddress);
-        given(repository.getIpLocation(anyString()))
+        given(geoIpRepository.getIpLocation(anyString()))
                 .willReturn(Optional.of(location));
         // when
         var result = underTest.getIpLocation(request);
         // then
-        verify(repository, times(1)).getIpLocation(ipAddress);
+        verify(geoIpRepository, times(1)).getIpLocation(ipAddress);
         verify(request, times(1)).getRemoteAddr();
         assertThat(result).isEqualTo(location);
     }
@@ -51,7 +53,7 @@ class GeoIpServiceImplTest {
         String ipAddress = "80.92.227.49";
         given(request.getRemoteAddr())
                 .willReturn(ipAddress);
-        given(repository.getIpLocation(anyString()))
+        given(geoIpRepository.getIpLocation(anyString()))
                 .willReturn(Optional.empty());
 
         var expectedLocation = new GeoIP("Genereted for : 80.92.227.49",
@@ -59,7 +61,7 @@ class GeoIpServiceImplTest {
         // when
         var result = underTest.getIpLocation(request);
         // then
-        verify(repository, times(1)).getIpLocation(ipAddress);
+        verify(geoIpRepository, times(1)).getIpLocation(ipAddress);
         verify(request, times(1)).getRemoteAddr();
         assertThat(result).isEqualTo(expectedLocation);
     }
@@ -67,14 +69,14 @@ class GeoIpServiceImplTest {
     @Test
     void canGetIpLocationWhenIpIsNullWithDefaultRecord() {
         // given
-        given(repository.getIpLocation(anyString()))
+        given(geoIpRepository.getIpLocation(anyString()))
                 .willReturn(Optional.empty());
         var expectedLocation = new GeoIP("Genereted for : 0:0:0:0:0:0:0:1",
                 "Kyiv", 50.4501, 30.5234);
         // when
         var result = underTest.getIpLocation(request);
         // then
-        verify(repository, times(1)).getIpLocation("0:0:0:0:0:0:0:1");
+        verify(geoIpRepository, times(1)).getIpLocation("0:0:0:0:0:0:0:1");
         verify(request, times(1)).getRemoteAddr();
         assertThat(result).isEqualTo(expectedLocation);
     }
@@ -104,11 +106,11 @@ class GeoIpServiceImplTest {
                         .build());
 
         // given
-        given(repository.getAllCities()).willReturn(list);
+        given(geoIpRepository.getAllCities()).willReturn(list);
         // when
         var actualResponse = underTest.getAllCities();
         // then
         assertThat(expectedResponse).isEqualTo(actualResponse);
-        verify(repository, times(1)).getAllCities();
+        verify(geoIpRepository, times(1)).getAllCities();
     }
 }

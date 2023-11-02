@@ -1,4 +1,4 @@
-package com.onrender.navkolodozvillya.aws;
+package com.onrender.navkolodozvillya.media.aws;
 
 import com.amazonaws.auth.AWSStaticCredentialsProvider;
 import com.amazonaws.auth.BasicAWSCredentials;
@@ -7,6 +7,9 @@ import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
+import com.amazonaws.services.s3.model.PutObjectResult;
+import com.amazonaws.services.s3.model.S3Object;
+import com.onrender.navkolodozvillya.media.BinaryStorageClient;
 import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -17,20 +20,16 @@ import java.util.UUID;
 
 //TODO Note, that service is a prototype!
 @Service
-public class AmazonClient {
+public class AmazonClient implements BinaryStorageClient {
 
     private AmazonS3 s3client;
 
-    @Value("${amazon.properties.endpointUrl}")
-    private String endpointUrl;
     @Value("${amazon.properties.bucketName}")
     private String bucketName;
     @Value("${amazon.properties.accessKey}")
     private String accessKey;
     @Value("${amazon.properties.secretKey}")
     private String secretKey;
-    @Value("${amazon.properties.region}")
-    private String region;
 
     @PostConstruct
     private void initializeAmazon() {
@@ -44,17 +43,13 @@ public class AmazonClient {
     }
 
     public String upload(InputStream inputStream) {
-        String fileUrl = "";
-        try {
-            String fileName = generateFileName();
-            fileUrl = endpointUrl + "/" + bucketName + "/" + fileName;
-//            uploadFileTos3bucket(fileName, file);
-            uploadFileTos3bucket(fileName, inputStream);
-//            file.delete();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return fileUrl;
+        String fileKey = generateFileName();
+        uploadFileToS3bucket(fileKey, inputStream);
+        return fileKey;
+    }
+
+    public String download(String fileKey) {
+        return null;
     }
 
     //generate unique name to the uploadfile
@@ -63,9 +58,16 @@ public class AmazonClient {
     }
 
     //upload files to s3
-    private void uploadFileTos3bucket(String fileName, InputStream inputStream) {
-//        s3client.putObject(new PutObjectRequest(bucketName, fileName, file)
-//                .withCannedAcl(CannedAccessControlList.PublicRead));
-        s3client.putObject(new PutObjectRequest(bucketName, fileName, inputStream, new ObjectMetadata()));
+    private void uploadFileToS3bucket(String fileKey, InputStream inputStream) {
+        PutObjectResult result = s3client.putObject(new PutObjectRequest(bucketName, fileKey, inputStream,
+                new ObjectMetadata()));
+
+    }
+
+    //TODO !! Think about approach
+    private void downloadFileFromS3bucket(String fileKey) {
+        S3Object s3Object = s3client.getObject(bucketName, fileKey);
+        s3Object.getObjectContent();
+
     }
 }

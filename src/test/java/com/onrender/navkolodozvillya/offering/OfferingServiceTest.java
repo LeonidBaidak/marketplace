@@ -8,6 +8,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.stubbing.Answer;
+import org.springframework.core.convert.ConversionService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -30,11 +31,13 @@ class OfferingServiceTest {
 
     @Mock private OfferingRepository offeringRepository;
     @Mock private OfferingResponseMapper offeringResponseMapper;
+    @Mock private ConversionService conversionService;
+
     private OfferingService underTest;
 
     @BeforeEach
     void setUp() {
-        underTest = new OfferingService(offeringRepository, offeringResponseMapper);
+        underTest = new OfferingService(offeringRepository, offeringResponseMapper, conversionService);
     }
 
     @Test

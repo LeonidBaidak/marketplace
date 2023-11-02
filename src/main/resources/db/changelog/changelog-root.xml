@@ -14,4 +14,6 @@
     <include file="db/changelog/sql/V07_create-favorite_offerings-table.sql"/>
     <include file="db/changelog/sql/V08_create-sequences.sql"/>
     <include file="db/changelog/changesets/geoip2_location-001.xml"/>
+    <include file="db/changelog/changesets/offerings-001.xml"/>
+    <include file="db/changelog/changesets/media_metadata-001.xml"/>
 </databaseChangeLog>

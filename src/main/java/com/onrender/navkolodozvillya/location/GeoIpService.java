@@ -6,6 +6,7 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static java.util.Objects.requireNonNull;
 
@@ -14,6 +15,8 @@ import static java.util.Objects.requireNonNull;
 @Log4j2
 public class GeoIpService {
     private final GeoIpRepository geoIpRepository;
+    private final LocationRepository locationRepository;
+
     public GeoIP getIpLocation(HttpServletRequest request) {
         requireNonNull(request, "request is null");
 
@@ -24,8 +27,18 @@ public class GeoIpService {
                 .orElse(new GeoIP(("Genereted for : " + ipAddress), "Kyiv", 50.4501, 30.5234));
     }
 
+    //TODO temporary for compliance. Need to remove all JDBC repo logic, move it here and to SpringData repo
     public List<CityResponse> getAllCities() {
-        return geoIpRepository.getAllCities();
+        return locationRepository.findAll().stream().map(location -> {
+                    return CityResponse
+                            .builder()
+                            .geonameId(location.getId())
+                            .cityName(location.getCityName())
+                            .uaCityName(location.getUaCityName())
+                            .build();
+                })
+                .collect(Collectors.toList());
+
     }
 
     private static String getIpAddress(HttpServletRequest request) {
