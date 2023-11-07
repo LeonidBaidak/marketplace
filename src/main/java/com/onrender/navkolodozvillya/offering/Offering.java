@@ -1,6 +1,8 @@
 package com.onrender.navkolodozvillya.offering;
 
 import com.onrender.navkolodozvillya.favouriteoffering.FavouriteOffering;
+import com.onrender.navkolodozvillya.location.Location;
+import com.onrender.navkolodozvillya.media.MediaMetadata;
 import com.onrender.navkolodozvillya.user.User;
 import jakarta.persistence.*;
 import lombok.*;
@@ -57,6 +59,20 @@ public class Offering {
             orphanRemoval = true,
             cascade = CascadeType.ALL)
     private List<FavouriteOffering> favouriteOfferings;
+
+    @ManyToOne(fetch = FetchType.LAZY,
+            optional = false)
+    @JoinColumn(name = "location_id")
+    private Location location;
+
+    private LocalDateTime eventDateTime;
+
+    @ManyToMany
+    @JoinTable(
+            name = "offerings_media_metadata",
+            joinColumns = @JoinColumn(name = "offering_id"),
+            inverseJoinColumns = @JoinColumn(name = "media_metadata_id"))
+    private List<MediaMetadata> linkedMediaMetadata;
 
     public void addFavouriteOffering(FavouriteOffering favouriteOffering) {
         favouriteOfferings.add(favouriteOffering);
