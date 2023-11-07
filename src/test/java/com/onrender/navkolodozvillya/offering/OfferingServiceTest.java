@@ -1,6 +1,8 @@
 package com.onrender.navkolodozvillya.offering;
 
 import com.onrender.navkolodozvillya.exception.entity.offering.OfferingNotFoundException;
+import com.onrender.navkolodozvillya.location.LocationRepository;
+import com.onrender.navkolodozvillya.media.MediaMetadataRepository;
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -9,7 +11,6 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.stubbing.Answer;
 import org.springframework.core.convert.ConversionService;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
@@ -29,19 +30,27 @@ import static org.mockito.Mockito.verify;
 @ExtendWith(MockitoExtension.class)
 class OfferingServiceTest {
 
-    @Mock private OfferingRepository offeringRepository;
-    @Mock private OfferingResponseMapper offeringResponseMapper;
-    @Mock private ConversionService conversionService;
+    @Mock
+    private OfferingRepository offeringRepository;
+    @Mock
+    private OfferingResponseMapper offeringResponseMapper;
+    @Mock
+    private ConversionService conversionService;
+    @Mock
+    private LocationRepository locationRepository;
+    @Mock
+    private MediaMetadataRepository mediaMetadataRepository;
 
     private OfferingService underTest;
 
     @BeforeEach
     void setUp() {
-        underTest = new OfferingService(offeringRepository, offeringResponseMapper, conversionService);
+        underTest = new OfferingService(offeringRepository, offeringResponseMapper, conversionService,
+                locationRepository, mediaMetadataRepository);
     }
 
     @Test
-    public void shouldFindAllOfferings(){
+    public void shouldFindAllOfferings() {
         // given
         var offerings = getOfferingList();
         Slice<Offering> offeringPage = new PageImpl<>(offerings);
@@ -58,7 +67,7 @@ class OfferingServiceTest {
     }
 
     @Test
-    public void shouldFindOfferingById(){
+    public void shouldFindOfferingById() {
         // given
         var offeringId = 2L;
         var offering = getOfferingList().get(1);
@@ -75,7 +84,7 @@ class OfferingServiceTest {
     }
 
     @Test
-    public void shouldThrowWhenCanNotFindById(){
+    public void shouldThrowWhenCanNotFindById() {
         // given
         var offeringId = 900L;
         given(offeringRepository.findById(anyLong()))
@@ -111,7 +120,7 @@ class OfferingServiceTest {
                 .category(OfferingCategory.EVENT)
                 .build();
 
-        var charityGalaDinner  = Offering.builder()
+        var charityGalaDinner = Offering.builder()
                 .id(2L)
                 .name("Charity Gala Dinner")
                 .description("""

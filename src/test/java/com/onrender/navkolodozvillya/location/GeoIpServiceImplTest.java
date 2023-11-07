@@ -83,13 +83,13 @@ class GeoIpServiceImplTest {
 
     @Test
     void getAllCitiesTest() {
-        List<CityResponse> list = List.of(CityResponse.builder()
-                        .geonameId(1)
+        List<Location> list = List.of(Location.builder()
+                        .id(1)
                         .cityName("test1")
                         .uaCityName("тест1")
                         .build(),
-                CityResponse.builder()
-                        .geonameId(2)
+                Location.builder()
+                        .id(2)
                         .cityName("test2")
                         .uaCityName("тест2")
                         .build());
@@ -106,11 +106,12 @@ class GeoIpServiceImplTest {
                         .build());
 
         // given
-        given(geoIpRepository.getAllCities()).willReturn(list);
+        given(locationRepository.findAll()).willReturn(list);
         // when
         var actualResponse = underTest.getAllCities();
         // then
         assertThat(expectedResponse).isEqualTo(actualResponse);
-        verify(geoIpRepository, times(1)).getAllCities();
+        verify(locationRepository, times(1)).findAll();
+        verifyNoMoreInteractions(geoIpRepository, locationRepository, request);
     }
 }

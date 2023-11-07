@@ -4,8 +4,6 @@ import jakarta.validation.Validation;
 import jakarta.validation.Validator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -18,7 +16,7 @@ class RegisterRequestTest {
     }
 
     @Test
-    public void firstNameShouldNotContainNonUkrainianCharacters(){
+    public void firstNameShouldNotContainNonUkrainianCharacters() {
         // given
         var request = new RegisterRequest(
                 "name",
@@ -36,7 +34,7 @@ class RegisterRequestTest {
     }
 
     @Test
-    public void lastNameShouldNotContainNonUkrainianCharacters(){
+    public void lastNameShouldNotContainNonUkrainianCharacters() {
         // given
         var request = new RegisterRequest(
                 null,
@@ -54,7 +52,7 @@ class RegisterRequestTest {
     }
 
     @Test
-    public void emailShouldBeValid(){
+    public void emailShouldBeValid() {
         // given
         var request = new RegisterRequest(
                 null,
@@ -72,7 +70,7 @@ class RegisterRequestTest {
     }
 
     @Test
-    public void emailShouldNotBeNull(){
+    public void emailShouldNotBeNull() {
         // given
         var request = new RegisterRequest(
                 null,
@@ -88,8 +86,9 @@ class RegisterRequestTest {
         assertThat(errorMessage)
                 .isEqualTo("Email must not be null");
     }
+
     @Test
-    public void passwordShouldNotBeNull(){
+    public void passwordShouldNotBeNull() {
         // given
         var request = new RegisterRequest(
                 null,
@@ -107,7 +106,7 @@ class RegisterRequestTest {
     }
 
     @Test
-    public void passwordShouldBeValid(){
+    public void passwordShouldBeValid() {
         // given
         var request = new RegisterRequest(
                 null,
@@ -128,7 +127,7 @@ class RegisterRequestTest {
     }
 
     @Test
-    public void passwordShouldBeLongerThan8AndShorterThan64Characters(){
+    public void passwordShouldBeLongerThan8AndShorterThan64Characters() {
         // given
         var request = new RegisterRequest(
                 null,

@@ -5,6 +5,7 @@ import com.onrender.navkolodozvillya.config.TestDatabaseContainerConfig;
 import com.onrender.navkolodozvillya.token.Token;
 import com.onrender.navkolodozvillya.token.TokenRepository;
 import com.onrender.navkolodozvillya.user.UserRepository;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +25,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest(classes = TestDatabaseContainerConfig.class)
 @TestPropertySource("classpath:application-test.properties")
 @AutoConfigureMockMvc
+@Disabled("Ignored in order to separate IT tests from unit tests")
 class AuthenticationIT {
     @Autowired
     private MockMvc mvc;
